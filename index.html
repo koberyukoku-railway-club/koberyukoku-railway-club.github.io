@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>はじめてのHTML</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
-      color: #333;
-      text-align: center;
-      padding-top: 100px;
-    }
-    h1 {
-      color: #007acc;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My PWA App</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="/icon.png" type="image/png">
+
+  <!-- iOS向けアイコン -->
+  <link rel="apple-touch-icon" href="/icon.png">
+
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- PWA設定 -->
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 </head>
 <body>
-  <h1>こんにちは、世界！</h1>
-  <p>これはサンプルのHTMLページです。</p>
+  <h1>ようこそ！</h1>
+  <p>このアプリをホーム画面に追加して使えます。</p>
+
+  <script>
+    // サービスワーカー登録
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('Service Worker 登録成功:', reg.scope))
+          .catch(err => console.error('Service Worker 登録失敗:', err));
+      });
+    }
+  </script>
 </body>
 </html>
