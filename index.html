@@ -109,27 +109,38 @@
 </head>
 <body>
   <div class="header-box">鉄研ポータル</div>
-  <div class="user-info" id="userInfo">山田太郎</div>
+  <div class="user-info" id="userInfo"></div>
 
   <div class="login-form" id="loginForm">
     <h2>ログイン</h2>
-    <input type="text" id="username" placeholder="ユーザー名" />
+    <input type="text" id="username" placeholder="ユーザーID" />
     <input type="password" id="password" placeholder="パスワード" />
     <button onclick="login()">ログイン</button>
   </div>
 
   <script>
-    function login() {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
+    // 登録済みアカウント（CSVから変換）
+    const accounts = [
+      { id: 'admin',       password: 'xctsw2zP2Z220312!', name: '管理者' },
+      { id: 'akamatsu',    password: 'fU3znFha',           name: '赤松克則' },
+      { id: 'arakawa',     password: 'Hs9qngCY',           name: '荒川航太郎' },
+      { id: 'ueda',        password: 'Hq7M4iQj',           name: '植田光一郎' },
+      { id: 'matsumoto',   password: 'qA2xkpuJ',           name: '松本誠司' }
+    ];
 
-      // 簡易的な認証処理（例: ユーザー名が "yamada" かつパスワードが "1234"）
-      if (username === "yamada" && password === "1234") {
+    function login() {
+      const inputId = document.getElementById('username').value.trim();
+      const inputPw = document.getElementById('password').value;
+
+      const user = accounts.find(acc => acc.id === inputId && acc.password === inputPw);
+
+      if (user) {
         document.getElementById('loginForm').style.display = 'none';
-        document.getElementById('userInfo').style.display = 'block';
-        document.getElementById('userInfo').textContent = '山田太郎';
+        const infoBox = document.getElementById('userInfo');
+        infoBox.textContent = user.name;
+        infoBox.style.display = 'block';
       } else {
-        alert('ユーザー名またはパスワードが間違っています。');
+        alert('ユーザーIDまたはパスワードが間違っています。');
       }
     }
 
