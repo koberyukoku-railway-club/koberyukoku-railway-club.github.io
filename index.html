@@ -21,32 +21,40 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
   <style>
+    @font-face {
+      font-family: 'Stick';
+      src: url('/Stick-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
+      font-family: 'Stick', sans-serif;
     }
 
     body {
       background-image: url('/background.PNG');
-      background-size: cover; /* 画面にフィット（縦横比保持） */
-      background-position: center; /* 中央に配置 */
-      background-repeat: no-repeat; /* 繰り返さない */
-      background-attachment: fixed; /* 背景固定 */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    .header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 2rem;
       color: white;
-      text-align: center;
-      font-family: sans-serif;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.7); /* 見やすくする */
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
     }
   </style>
 </head>
 <body>
-  <h1>鉄研ポータルへようこそ！</h1>
-  <p>このサイトはホーム画面に追加してアプリのように使えます。</p>
+  <div class="header">鉄研ポータル</div>
 
   <script>
     if ('serviceWorker' in navigator) {
