@@ -7,11 +7,7 @@
 
   <!-- Favicon -->
   <link rel="icon" href="/icon.png" type="image/png">
-
-  <!-- iOS向けアイコン -->
   <link rel="apple-touch-icon" href="/icon.png">
-
-  <!-- Web App Manifest -->
   <link rel="manifest" href="/manifest.json" />
 
   <!-- PWA設定 -->
@@ -43,20 +39,101 @@
       background-attachment: fixed;
     }
 
-    .header {
+    .header-box {
       position: absolute;
       top: 20px;
       left: 20px;
-      font-size: 2rem;
+      background-color: white;
+      color: black;
+      border: 2px solid navy;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-size: 1.5rem;
+    }
+
+    .user-info {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: white;
+      color: black;
+      border: 2px solid navy;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      display: none;
+    }
+
+    .login-form {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border: 2px solid navy;
+      border-radius: 12px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .login-form h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: navy;
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .login-form button {
+      width: 100%;
+      padding: 10px;
+      background-color: navy;
       color: white;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .login-form button:hover {
+      background-color: #001f4d;
     }
   </style>
 </head>
 <body>
-  <div class="header">鉄研ポータル</div>
+  <div class="header-box">鉄研ポータル</div>
+  <div class="user-info" id="userInfo">山田太郎</div>
+
+  <div class="login-form" id="loginForm">
+    <h2>ログイン</h2>
+    <input type="text" id="username" placeholder="ユーザー名" />
+    <input type="password" id="password" placeholder="パスワード" />
+    <button onclick="login()">ログイン</button>
+  </div>
 
   <script>
+    function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      // 簡易的な認証処理（例: ユーザー名が "yamada" かつパスワードが "1234"）
+      if (username === "yamada" && password === "1234") {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('userInfo').style.display = 'block';
+        document.getElementById('userInfo').textContent = '山田太郎';
+      } else {
+        alert('ユーザー名またはパスワードが間違っています。');
+      }
+    }
+
+    // PWAのService Worker登録
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/service-worker.js')
