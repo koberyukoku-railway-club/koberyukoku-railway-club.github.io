@@ -16,15 +16,24 @@ const accounts = [
 function showUser(user) {
   const userDropdown = document.getElementById('userDropdown');
   const userName = document.getElementById('userName');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+
   userName.textContent = user.name;
   userDropdown.style.display = 'block';
+  document.getElementById('loginForm').style.display = 'none';
 
+  // Toggle dropdown
   userName.onclick = () => {
-    const menu = document.getElementById('dropdownMenu');
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    dropdownMenu.style.display =
+      dropdownMenu.style.display === 'block' ? 'none' : 'block';
   };
 
-  document.getElementById('loginForm').style.display = 'none';
+  // Hide dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!userDropdown.contains(e.target)) {
+      dropdownMenu.style.display = 'none';
+    }
+  });
 }
 
 function login() {
@@ -56,7 +65,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // PWA Service Worker 登録
+  // Service Worker 登録
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/service-worker.js')
