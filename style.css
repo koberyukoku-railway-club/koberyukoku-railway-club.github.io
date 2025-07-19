@@ -1,0 +1,102 @@
+@font-face {
+  font-family: 'Stick';
+  src: url('/Stick-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Stick', sans-serif;
+  background-image: url('/background.PNG');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* ヘッダー */
+.site-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 2px solid navy;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.header-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: navy;
+}
+
+.user-info {
+  font-size: 1rem;
+  color: black;
+  display: none;
+}
+
+.logout-btn {
+  margin-left: 10px;
+  color: navy;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* メイン */
+main {
+  padding-top: 100px;
+}
+
+.login-form {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border: 2px solid navy;
+  border-radius: 12px;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+  width: fit-content;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.login-form h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: navy;
+}
+
+.login-form input,
+.login-form button {
+  width: 200px;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.login-form input {
+  border: 1px solid #ccc;
+}
+
+.login-form button {
+  background-color: navy;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.login-form button:hover {
+  background-color: #001f4d;
+}
