@@ -14,9 +14,17 @@ const accounts = [
 ];
 
 function showUser(user) {
-  const infoBox = document.getElementById('userInfo');
-  infoBox.innerHTML = `${user.name} さん <button class="logout-btn" onclick="logout()">ログアウト</button>`;
-  infoBox.style.display = 'block';
+  const userDropdown = document.getElementById('userDropdown');
+  const userName = document.getElementById('userName');
+  userName.textContent = user.name;
+  userDropdown.style.display = 'block';
+
+  // ドロップダウン表示切り替え
+  userName.onclick = () => {
+    const menu = document.getElementById('dropdownMenu');
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  };
+
   document.getElementById('loginForm').style.display = 'none';
 }
 
