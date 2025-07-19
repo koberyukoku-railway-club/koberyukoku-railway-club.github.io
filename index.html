@@ -8,187 +8,28 @@
   <link rel="icon" href="/icon.png" type="image/png">
   <link rel="apple-touch-icon" href="/icon.png">
   <link rel="manifest" href="/manifest.json" />
-
   <meta name="theme-color" content="#ffffff" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
-  <style>
-    @font-face {
-      font-family: 'Stick';
-      src: url('/Stick-Regular.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: 'Stick', sans-serif;
-    }
-
-    body {
-      background-image: url('/background.PNG');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-    }
-
-    .header-box {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background-color: white;
-      color: black;
-      border: 2px solid navy;
-      border-radius: 12px;
-      padding: 10px 20px;
-      font-size: 1.5rem;
-    }
-
-    .user-info {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background-color: white;
-      color: black;
-      border: 2px solid navy;
-      border-radius: 12px;
-      padding: 10px 20px;
-      font-size: 1rem;
-      display: none;
-    }
-
-    .login-form {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 30px;
-      border: 2px solid navy;
-      border-radius: 12px;
-      box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-      text-align: center;
-    }
-
-    .login-form h2 {
-      margin-top: 0;
-      margin-bottom: 1rem;
-      color: navy;
-    }
-
-    .login-form input,
-    .login-form button {
-      width: 200px;
-      padding: 8px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-
-    .login-form input {
-      border: 1px solid #ccc;
-    }
-
-    .login-form button {
-      background-color: navy;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    .login-form button:hover {
-      background-color: #001f4d;
-    }
-
-    .logout-btn {
-      margin-left: 10px;
-      color: navy;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="header-box">鉄研ポータル</div>
-  <div class="user-info" id="userInfo"></div>
+  <header class="site-header">
+    <div class="header-title">鉄研ポータル</div>
+    <div class="user-info" id="userInfo"></div>
+  </header>
 
-  <div class="login-form" id="loginForm">
-    <h2>ログイン</h2>
-    <input type="text" id="username" placeholder="ユーザーID" />
-    <input type="password" id="password" placeholder="パスワード" />
-    <button onclick="login()">ログイン</button>
-  </div>
+  <main>
+    <div class="login-form" id="loginForm">
+      <h2>ログイン</h2>
+      <input type="text" id="username" placeholder="ユーザーID" />
+      <input type="password" id="password" placeholder="パスワード" />
+      <button onclick="login()">ログイン</button>
+    </div>
+  </main>
 
-  <script>
-    const accounts = [
-      { id: 'admin',      password: 'xctsw2zP2Z220312!', name: '管理者' },
-      { id: 'akamatsu',   password: 'fU3znFha',           name: '赤松克則' },
-      { id: 'arakawa',    password: 'Hs9qngCY',           name: '荒川航太郎' },
-      { id: 'ueda',       password: 'Hq7M4iQj',           name: '植田光一郎' },
-      { id: 'matsumoto',  password: 'qA2xkpuJ',           name: '松本誠司' },
-      { id: 'aritsu',     password: 'iK5gbpRs',           name: '有津楽人' },
-      { id: 'shimura',    password: 'M9gZApJy',           name: '四村嶺伯' },
-      { id: 'nakashima',  password: 'D2ezKXt4',           name: '中嶋拓人' },
-      { id: 'mori',       password: 'G4yZKTVr',           name: '森悠成' },
-      { id: 'hontani',    password: 'xctsw2zP2Z220312!',  name: '本谷はじめ' },
-      { id: 'nikaido',    password: 'Br8gEDbj',           name: '二階堂宏紀' },
-      { id: 'takeuchi',   password: 'g9MTFAvr',           name: '武内悠祐' }
-    ];
-
-    function showUser(user) {
-      const infoBox = document.getElementById('userInfo');
-      infoBox.innerHTML = `${user.name} さん <button class="logout-btn" onclick="logout()">ログアウト</button>`;
-      infoBox.style.display = 'block';
-      document.getElementById('loginForm').style.display = 'none';
-    }
-
-    function login() {
-      const inputId = document.getElementById('username').value.trim();
-      const inputPw = document.getElementById('password').value;
-
-      const user = accounts.find(acc => acc.id === inputId && acc.password === inputPw);
-
-      if (user) {
-        localStorage.setItem('loggedInUserId', user.id);
-        showUser(user);
-      } else {
-        alert('ユーザーIDまたはパスワードが間違っています。');
-      }
-    }
-
-    function logout() {
-      localStorage.removeItem('loggedInUserId');
-      location.reload();
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedId = localStorage.getItem('loggedInUserId');
-      if (savedId) {
-        const user = accounts.find(acc => acc.id === savedId);
-        if (user) {
-          showUser(user);
-        } else {
-          localStorage.removeItem('loggedInUserId'); // 不正データの対処
-        }
-      }
-    });
-
-    // Service Worker 登録
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(reg => console.log('Service Worker 登録成功:', reg.scope))
-          .catch(err => console.error('Service Worker 登録失敗:', err));
-      });
-    }
-  </script>
+  <script src="code.js"></script>
 </body>
 </html>
