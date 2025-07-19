@@ -18,7 +18,12 @@
 <body>
   <header class="site-header">
     <div class="header-title">鉄研ポータル</div>
-    <div class="user-info" id="userInfo"></div>
+    <div class="user-dropdown" id="userDropdown" style="display: none;">
+      <div class="user-name" id="userName"></div>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <button onclick="logout()">ログアウト</button>
+      </div>
+    </div>
   </header>
 
   <main>
