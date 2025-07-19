@@ -17,13 +17,12 @@ html, body {
   background-attachment: fixed;
 }
 
-/* ヘッダー */
 .site-header {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  padding: 15px 30px;
   background: rgba(255, 255, 255, 0.95);
   border-bottom: 2px solid navy;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -31,6 +30,7 @@ html, body {
   top: 0;
   left: 0;
   z-index: 10;
+  box-sizing: border-box;
 }
 
 .header-title {
@@ -42,29 +42,27 @@ html, body {
 /* ユーザードロップダウン */
 .user-dropdown {
   position: relative;
-  max-width: 40%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  max-width: 150px;
+  overflow: visible;
+  margin-left: auto;
 }
 
 .user-name {
-  padding: 5px 12px;
+  padding: 5px 10px;
   border: 2px solid navy;
   border-radius: 8px;
   background-color: white;
   font-weight: bold;
-  color: navy;
-  cursor: pointer;
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  cursor: pointer;
+  color: navy;
 }
 
 .dropdown-menu {
   position: absolute;
-  top: 110%;
+  top: calc(100% + 5px);
   right: 0;
   background-color: white;
   border: 1px solid navy;
@@ -72,7 +70,8 @@ html, body {
   padding: 5px 10px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
   display: none;
-  z-index: 100;
+  white-space: nowrap;
+  z-index: 20;
 }
 
 .dropdown-menu button {
