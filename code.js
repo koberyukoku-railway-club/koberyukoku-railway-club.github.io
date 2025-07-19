@@ -19,7 +19,6 @@ function showUser(user) {
   userName.textContent = user.name;
   userDropdown.style.display = 'block';
 
-  // ドロップダウン表示切り替え
   userName.onclick = () => {
     const menu = document.getElementById('dropdownMenu');
     menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
