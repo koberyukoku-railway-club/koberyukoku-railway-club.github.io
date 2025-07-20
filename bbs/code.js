@@ -34,7 +34,7 @@ let currentUser = null;
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
   if (user) {
-    loadAnnouncements();
+    loadAnnouncements();  // ログインしたらお知らせをロード
   }
 });
 
@@ -92,6 +92,7 @@ document.getElementById("announcement-form").addEventListener("submit", async (e
   const content = document.getElementById("content").value;
 
   if (currentUser) {
+    // Firestoreにお知らせデータを保存
     await addDoc(collection(db, "announcements"), {
       username: currentUser.displayName,
       startDate: new Date(startDate),
@@ -109,9 +110,27 @@ async function deleteAnnouncement(id) {
   loadAnnouncements();  // 再ロード
 }
 
-// お知らせ編集処理（追加機能が必要）
+// お知らせ編集処理（必要に応じて実装）
 function editAnnouncement(id) {
-  // 編集処理（必要な場合）
   console.log("編集機能が未実装です。");
 }
 
+// 自動で表示期間終了したお知らせを削除
+async function deleteExpiredAnnouncements() {
+  const q = query(collection(db, "announcements"));
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    const currentTime = new Date().getTime();
+    const endDate = data.endDate.seconds * 1000;
+
+    // 表示期間が過ぎているお知らせを削除
+    if (currentTime > endDate) {
+      deleteDoc(doc.ref);  // Firebaseから削除
+    }
+  });
+}
+
+// ページロード時に自動で削除処理を実行
+window.onload = deleteExpiredAnnouncements;
