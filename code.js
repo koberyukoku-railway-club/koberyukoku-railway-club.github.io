@@ -1,34 +1,37 @@
-const accounts = [
-  { id: 'admin',      password: 'xctsw2zP2Z220312!', name: '管理者' },
-  { id: 'akamatsu',   password: 'fU3znFha',           name: '赤松克則' },
-  { id: 'arakawa',    password: 'Hs9qngCY',           name: '荒川航太郎' },
-  { id: 'ueda',       password: 'Hq7M4iQj',           name: '植田光一郎' },
-  { id: 'matsumoto',  password: 'qA2xkpuJ',           name: '松本誠司' },
-  { id: 'aritsu',     password: 'iK5gbpRs',           name: '有津楽人' },
-  { id: 'shimura',    password: 'M9gZApJy',           name: '四村嶺伯' },
-  { id: 'nakashima',  password: 'D2ezKXt4',           name: '中嶋拓人' },
-  { id: 'mori',       password: 'G4yZKTVr',           name: '森悠成' },
-  { id: 'hontani',    password: 'xctsw2zP2Z220312!',  name: '本谷はじめ' },
-  { id: 'nikaido',    password: 'Br8gEDbj',           name: '二階堂宏紀' },
-  { id: 'takeuchi',   password: 'g9MTFAvr',           name: '武内悠祐' }
-];
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-function showUser(user) {
+// Firebaseの設定（自分のプロジェクトの情報を入れる）
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "XXXXXXX",
+  appId: "YOUR_APP_ID"
+};
+
+// 初期化
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// UI表示切り替え
+function showUser(name) {
   const userDropdown = document.getElementById('userDropdown');
   const userName = document.getElementById('userName');
   const dropdownMenu = document.getElementById('dropdownMenu');
 
-  userName.textContent = user.name;
+  userName.textContent = name;
   userDropdown.style.display = 'block';
   document.getElementById('loginForm').style.display = 'none';
 
-  // Toggle dropdown
   userName.onclick = () => {
     dropdownMenu.style.display =
       dropdownMenu.style.display === 'block' ? 'none' : 'block';
   };
 
-  // Hide dropdown when clicking outside
   document.addEventListener('click', (e) => {
     if (!userDropdown.contains(e.target)) {
       dropdownMenu.style.display = 'none';
@@ -36,41 +39,46 @@ function showUser(user) {
   });
 }
 
-function login() {
-  const inputId = document.getElementById('username').value.trim();
-  const inputPw = document.getElementById('password').value;
-  const user = accounts.find(acc => acc.id === inputId && acc.password === inputPw);
+// ログイン処理
+window.login = async function () {
+  const inputUsername = document.getElementById('username').value.trim();
+  const inputPassword = document.getElementById('password').value;
 
-  if (user) {
-    localStorage.setItem('loggedInUserId', user.id);
-    showUser(user);
-  } else {
-    alert('ユーザーIDまたはパスワードが間違っています。');
-  }
-}
+  try {
+    const userRef = doc(db, "usernameMap", inputUsername);
+    const userSnap = await getDoc(userRef);
 
-function logout() {
-  localStorage.removeItem('loggedInUserId');
-  location.reload();
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-  const savedId = localStorage.getItem('loggedInUserId');
-  if (savedId) {
-    const user = accounts.find(acc => acc.id === savedId);
-    if (user) {
-      showUser(user);
-    } else {
-      localStorage.removeItem('loggedInUserId');
+    if (!userSnap.exists()) {
+      alert("ユーザーが存在しません。");
+      return;
     }
-  }
 
-  // Service Worker 登録
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(reg => console.log('Service Worker 登録成功:', reg.scope))
-        .catch(err => console.error('Service Worker 登録失敗:', err));
-    });
+    const { email, name } = userSnap.data();
+    const userCredential = await signInWithEmailAndPassword(auth, email, inputPassword);
+    showUser(name);
+  } catch (error) {
+    console.error(error);
+    alert("ログインに失敗しました。ユーザーIDまたはパスワードが間違っている可能性があります。");
+  }
+};
+
+// ログアウト
+window.logout = async function () {
+  await signOut(auth);
+  location.reload();
+};
+
+// ページ読み込み時にログイン状態チェック
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    // Firestoreで名前取得
+    const q = doc(db, "emailToUsername", user.email);
+    const snapshot = await getDoc(q);
+    if (snapshot.exists()) {
+      const { name } = snapshot.data();
+      showUser(name);
+    } else {
+      showUser("ユーザー");
+    }
   }
 });
