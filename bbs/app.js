@@ -8,10 +8,10 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// usernameMap または emailToUsername で取得する関数（例）
-async function getUsername(email) {
+// email から名前（name）を取得
+async function getUserNameByEmail(email) {
   const doc = await db.collection('emailToUsername').doc(email).get();
-  return doc.exists ? doc.data().username : "不明なユーザー";
+  return doc.exists ? doc.data().name : "不明なユーザー";
 }
 
 // 投稿フォーム処理
@@ -28,10 +28,10 @@ document.getElementById("notice-form").addEventListener("submit", async (e) => {
     return;
   }
 
-  const username = await getUsername(user.email);
+  const userName = await getUserNameByEmail(user.email);
 
   await db.collection("notices").add({
-    username,
+    username: userName,
     content,
     startAt: firebase.firestore.Timestamp.fromDate(startAt),
     endAt: firebase.firestore.Timestamp.fromDate(endAt),
