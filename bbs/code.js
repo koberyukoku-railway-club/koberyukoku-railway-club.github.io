@@ -1,8 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
   getFirestore,
   collection,
@@ -34,9 +31,21 @@ let currentUser = null;
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
   if (user) {
-    loadAnnouncements();  // ログインしたらお知らせをロード
+    // ログインしたらお知らせをロード
+    loadAnnouncements();
+    displayUserName();
   }
 });
+
+// ユーザー名の表示
+function displayUserName() {
+  const userNameElement = document.getElementById('user-name');
+  if (currentUser && currentUser.displayName) {
+    userNameElement.textContent = currentUser.displayName;
+  } else {
+    userNameElement.textContent = "ゲスト";
+  }
+}
 
 // お知らせをロード
 async function loadAnnouncements() {
@@ -51,11 +60,10 @@ async function loadAnnouncements() {
     const announcementItem = document.createElement("div");
     announcementItem.classList.add("announcement-item");
 
-    // 投稿者名、内容、日付の表示
+    // 投稿者名、内容の表示
     announcementItem.innerHTML = `
       <div><strong>【${data.username}】</strong></div>
       <div class="announcement-content">${data.content}</div>
-      <div><em>表示期間: ${new Date(data.startDate.seconds * 1000).toLocaleString()} - ${new Date(data.endDate.seconds * 1000).toLocaleString()}</em></div>
     `;
 
     // 編集・削除ボタン（投稿者のみ）
@@ -87,17 +95,15 @@ async function loadAnnouncements() {
 document.getElementById("announcement-form").addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const startDate = new Date(document.getElementById("start-date").value).getTime();
-  const endDate = new Date(document.getElementById("end-date").value).getTime();
   const content = document.getElementById("content").value;
 
   if (currentUser) {
     // Firestoreにお知らせデータを保存
     await addDoc(collection(db, "announcements"), {
       username: currentUser.displayName,
-      startDate: new Date(startDate),
-      endDate: new Date(endDate),
       content: content,
+      startDate: new Date(),
+      endDate: new Date(new Date().getTime() + 86400000), // 24時間後に終了
     });
 
     loadAnnouncements();  // 再ロード
