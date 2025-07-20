@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <link rel="stylesheet" href="style.css" />
-  <!-- Firebase SDK -->
+  <!-- Firebase SDK（HTML側では import だけでOK） -->
   <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
   <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
   <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
@@ -34,6 +34,7 @@
       <input type="text" id="username" placeholder="ユーザーID" />
       <input type="password" id="password" placeholder="パスワード" />
       <button onclick="login()">ログイン</button>
+      <div id="loading" style="display: none; color: navy; margin-top: 10px;">ログイン中...</div>
     </div>
   </main>
 
