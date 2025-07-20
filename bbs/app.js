@@ -1,17 +1,34 @@
-// Firebase 初期化
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+// Firebaseのモジュールをインポート
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "firebase/firestore";
 
-// email から名前（name）を取得
-async function getUserNameByEmail(email) {
-  const doc = await db.collection('emailToUsername').doc(email).get();
-  return doc.exists ? doc.data().name : "不明なユーザー";
+// Firebaseの設定（プロジェクトの設定に合わせてコピペ）
+const firebaseConfig = {
+  apiKey: "AIzaSyD4UOBvpG254FLtK0MGm6R3LKMbgU6huYA",
+  authDomain: "tekken-portal-76f26.firebaseapp.com",
+  projectId: "tekken-portal-76f26",
+  storageBucket: "tekken-portal-76f26.firebasestorage.app",
+  messagingSenderId: "516955782397",
+  appId: "1:516955782397:web:35bb7ccd1a5bbf32ebd294"
+};
+
+// Firebaseの初期化
+const app = initializeApp(firebaseConfig);
+
+// Firebaseの認証とFirestoreを取得
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// usernameMap などを使ってユーザー名を取得する関数（例）
+async function getUsername(email) {
+  const userRef = collection(db, "emailToUsername");
+  const userQuery = query(userRef, where("email", "==", email));
+  const userSnapshot = await getDocs(userQuery);
+  if (!userSnapshot.empty) {
+    return userSnapshot.docs[0].data().username;  // ユーザー名を返す
+  }
+  return "不明なユーザー";
 }
 
 // 投稿フォーム処理
@@ -28,17 +45,22 @@ document.getElementById("notice-form").addEventListener("submit", async (e) => {
     return;
   }
 
-  const userName = await getUserNameByEmail(user.email);
+  const username = await getUsername(user.email);
 
-  await db.collection("notices").add({
-    username: userName,
-    content,
-    startAt: firebase.firestore.Timestamp.fromDate(startAt),
-    endAt: firebase.firestore.Timestamp.fromDate(endAt),
-    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-  });
+  try {
+    // Firestoreに投稿データを追加
+    await addDoc(collection(db, "notices"), {
+      username,
+      content,
+      startAt: startAt,
+      endAt: endAt,
+      createdAt: new Date()
+    });
 
-  document.getElementById("notice-form").reset();
+    document.getElementById("notice-form").reset(); // フォームをリセット
+  } catch (e) {
+    console.error("投稿に失敗しました: ", e);
+  }
 });
 
 // お知らせの表示
@@ -49,27 +71,27 @@ function renderNotice(notice) {
   return div;
 }
 
-// 表示中のお知らせのみ取得（現在が startAt 〜 endAt の間）
-auth.onAuthStateChanged((user) => {
+// Firestoreからお知らせを取得し表示
+onAuthStateChanged(auth, (user) => {
   if (user) {
-    db.collection("notices")
-      .orderBy("createdAt", "desc")
-      .onSnapshot((snapshot) => {
-        const noticesDiv = document.getElementById("notices");
-        noticesDiv.innerHTML = "";
+    const q = query(collection(db, "notices"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+      const noticesDiv = document.getElementById("notices");
+      noticesDiv.innerHTML = "";  // 既存のお知らせを消す
 
-        const now = new Date();
+      const now = new Date();
 
-        snapshot.docs.forEach((doc) => {
-          const data = doc.data();
-          const start = data.startAt?.toDate();
-          const end = data.endAt?.toDate();
+      snapshot.docs.forEach((doc) => {
+        const data = doc.data();
+        const start = data.startAt.toDate();
+        const end = data.endAt.toDate();
 
-          if (start <= now && now <= end) {
-            const noticeEl = renderNotice(data);
-            noticesDiv.appendChild(noticeEl);
-          }
-        });
+        // 現在の時間が表示期間内にあるかを確認
+        if (start <= now && now <= end) {
+          const noticeEl = renderNotice(data);
+          noticesDiv.appendChild(noticeEl);
+        }
       });
+    });
   }
 });
