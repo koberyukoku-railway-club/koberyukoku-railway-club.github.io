@@ -3,41 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>鉄研ポータル - 掲示板</title>
+  <title>鉄研ポータル</title>
+  <link rel="icon" href="/icon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/icon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <link rel="stylesheet" href="style.css" />
-  <script type="module" src="code.js"></script>
 </head>
 <body>
-  <div id="board">
-    <!-- お知らせ表示エリア -->
-    <section id="announcements">
-      <div class="announcement-header">
-        <span>お知らせ - 2025年7月20日</span>
-      </div>
-      <div id="announcement-list">
-        <!-- お知らせはここに表示される -->
-      </div>
-    </section>
+  <header class="site-header">
+    <div class="header-title">鉄研ポータル</div>
+  </header>
+
+  <main>
+    <!-- お知らせ一覧 -->
+    <div id="announcement-list"></div>
 
     <!-- 投稿フォーム -->
-    <section id="post-form">
-      <h2>お知らせ投稿</h2>
+    <div id="announcement-form-container">
       <form id="announcement-form">
-        <div class="form-group">
-          <label for="start-date">表示開始日時</label>
-          <input type="datetime-local" id="start-date" required />
-        </div>
-        <div class="form-group">
-          <label for="end-date">表示終了日時</label>
-          <input type="datetime-local" id="end-date" required />
-        </div>
-        <div class="form-group">
-          <label for="content">お知らせ内容</label>
-          <textarea id="content" rows="5" required></textarea>
-        </div>
-        <button type="submit" id="post-button" style="background-color: #000080; color: white;">投稿</button>
+        <label for="start-date">表示開始:</label>
+        <input type="datetime-local" id="start-date" required />
+        
+        <label for="end-date">表示終了:</label>
+        <input type="datetime-local" id="end-date" required />
+
+        <label for="content">お知らせ内容:</label>
+        <textarea id="content" required></textarea>
+        
+        <button type="submit">投稿</button>
       </form>
-    </section>
-  </div>
+    </div>
+  </main>
+
+  <script type="module" src="code.js"></script>
 </body>
 </html>
+
