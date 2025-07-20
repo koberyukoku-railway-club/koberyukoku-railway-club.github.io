@@ -1,8 +1,17 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Firebaseの設定（自分のプロジェクトの情報を入れる）
+// Firebase 設定（あなたのプロジェクト）
 const firebaseConfig = {
   apiKey: "AIzaSyD4UOBvpG254FLtK0MGm6R3LKMbgU6huYA",
   authDomain: "tekken-portal-76f26.firebaseapp.com",
@@ -12,12 +21,12 @@ const firebaseConfig = {
   appId: "1:516955782397:web:35bb7ccd1a5bbf32ebd294"
 };
 
-// 初期化
+// Firebase 初期化
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// UI表示切り替え
+// ユーザー表示関数
 function showUser(name) {
   const userDropdown = document.getElementById('userDropdown');
   const userName = document.getElementById('userName');
@@ -43,6 +52,8 @@ function showUser(name) {
 window.login = async function () {
   const inputUsername = document.getElementById('username').value.trim();
   const inputPassword = document.getElementById('password').value;
+  const loadingElem = document.getElementById('loading');
+  loadingElem.style.display = 'block';
 
   try {
     const userRef = doc(db, "usernameMap", inputUsername);
@@ -50,6 +61,7 @@ window.login = async function () {
 
     if (!userSnap.exists()) {
       alert("ユーザーが存在しません。");
+      loadingElem.style.display = 'none';
       return;
     }
 
@@ -59,19 +71,20 @@ window.login = async function () {
   } catch (error) {
     console.error(error);
     alert("ログインに失敗しました。ユーザーIDまたはパスワードが間違っている可能性があります。");
+  } finally {
+    loadingElem.style.display = 'none';
   }
 };
 
-// ログアウト
+// ログアウト処理
 window.logout = async function () {
   await signOut(auth);
   location.reload();
 };
 
-// ページ読み込み時にログイン状態チェック
+// ページ読み込み時にログイン状態確認
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    // Firestoreで名前取得
     const q = doc(db, "emailToUsername", user.email);
     const snapshot = await getDoc(q);
     if (snapshot.exists()) {
