@@ -4,12 +4,12 @@ import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10
 
 // Firebaseの設定（自分のプロジェクトの情報を入れる）
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "XXXXXXX",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyD4UOBvpG254FLtK0MGm6R3LKMbgU6huYA",
+  authDomain: "tekken-portal-76f26.firebaseapp.com",
+  projectId: "tekken-portal-76f26",
+  storageBucket: "tekken-portal-76f26.firebasestorage.app",
+  messagingSenderId: "516955782397",
+  appId: "1:516955782397:web:35bb7ccd1a5bbf32ebd294"
 };
 
 // 初期化
