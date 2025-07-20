@@ -1,70 +1,103 @@
 body {
-  font-family: 'Stick', sans-serif;
-  background-color: #f9f9f9;
+  font-family: 'Stick-Regular', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+#board {
+  width: 90%;
+  margin: 20px auto;
+}
+
+#announcements {
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 20px;
-  color: #333;
+  border-radius: 10px;
 }
 
-@font-face {
-  font-family: 'Stick';
-  src: url('Stick-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-.container {
-  max-width: 600px;
-  margin: auto;
-}
-
-h1 {
+.announcement-header {
+  font-size: 20px;
+  font-weight: bold;
   text-align: center;
-  color: #000080;
+  margin-bottom: 20px;
 }
 
-form {
+#announcement-list {
   margin-top: 20px;
-  background: #fff;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
 }
 
-textarea, input[type="datetime-local"] {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  margin-bottom: 10px;
-  font-family: 'Stick', sans-serif;
+.announcement-item {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
 }
 
-.submit-btn {
-  background-color: #000080;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 6px;
+.announcement-item:last-child {
+  border-bottom: none;
+}
+
+.announcement-content {
+  margin-top: 10px;
+}
+
+button {
   cursor: pointer;
 }
 
-.submit-btn:hover {
-  background-color: #000060;
+#post-form {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
 }
 
-.notice {
-  background: #fff;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+.form-group {
+  margin-bottom: 15px;
 }
 
-.notice + .notice {
-  border-top: 1px solid #ccc;
+label {
+  display: block;
+  font-size: 16px;
 }
 
-.username {
-  font-weight: bold;
-  margin-bottom: 5px;
+textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+}
+
+input[type="datetime-local"] {
+  width: 100%;
+  padding: 10px;
+}
+
+#post-button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #000080;
+  color: white;
+}
+
+#post-button:hover {
+  background-color: #003366;
+}
+
+.edit-delete-btns {
+  margin-top: 10px;
+}
+
+button.edit-btn, button.delete-btn {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.edit-btn:hover, button.delete-btn:hover {
+  background-color: #004b8c;
 }
