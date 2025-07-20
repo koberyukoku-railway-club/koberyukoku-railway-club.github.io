@@ -4,16 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>鉄研ポータル</title>
-
-  <link rel="icon" href="/icon.png" type="image/png">
-  <link rel="apple-touch-icon" href="/icon.png">
+  <link rel="icon" href="/icon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/icon.png" />
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#ffffff" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-
   <link rel="stylesheet" href="style.css" />
+  <!-- Firebase SDK -->
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 </head>
 <body>
   <header class="site-header">
@@ -35,6 +37,6 @@
     </div>
   </main>
 
-  <script src="code.js"></script>
+  <script type="module" src="code.js"></script>
 </body>
 </html>
