@@ -12,10 +12,83 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Stick-Regular', sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .header-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .announcement-item {
+      background-color: #fff;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .announcement-content {
+      margin-top: 10px;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    .edit-btn, .delete-btn {
+      background-color: #000080;
+      color: white;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .edit-btn:hover, .delete-btn:hover {
+      background-color: #003366;
+    }
+    #announcement-form-container {
+      margin-top: 30px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    #announcement-form input, #announcement-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #announcement-form button {
+      background-color: #000080;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #announcement-form button:hover {
+      background-color: #003366;
+    }
+    .announcement-item + .announcement-item {
+      border-top: 1px solid #ddd;
+    }
+    .user-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
     <div class="header-title">鉄研ポータル</div>
+    <div class="user-info">
+      <span id="user-name">ゲスト</span> | <a href="javascript:void(0);" onclick="logout()">ログアウト</a>
+    </div>
   </header>
 
   <main>
@@ -25,15 +98,9 @@
     <!-- 投稿フォーム -->
     <div id="announcement-form-container">
       <form id="announcement-form">
-        <label for="start-date">表示開始:</label>
-        <input type="datetime-local" id="start-date" required />
-        
-        <label for="end-date">表示終了:</label>
-        <input type="datetime-local" id="end-date" required />
-
         <label for="content">お知らせ内容:</label>
-        <textarea id="content" required></textarea>
-        
+        <textarea id="content" required placeholder="お知らせを入力してください"></textarea>
+
         <button type="submit">投稿</button>
       </form>
     </div>
@@ -42,4 +109,3 @@
   <script type="module" src="code.js"></script>
 </body>
 </html>
-
