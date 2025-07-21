@@ -25,22 +25,18 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 function showUser(name) {
-  const userDropdown = document.getElementById('userDropdown');
-  const userName = document.getElementById('userName');
-  const dropdownMenu = document.getElementById('dropdownMenu');
-
-  userName.textContent = name;
-  userDropdown.style.display = 'block';
+  document.getElementById('userDropdown').style.display = 'block';
+  document.getElementById('userName').textContent = name;
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('contentArea').style.display = 'flex';
 
-  userName.onclick = () => {
-    dropdownMenu.style.display =
-      dropdownMenu.style.display === 'block' ? 'none' : 'block';
+  const dropdownMenu = document.getElementById('dropdownMenu');
+  document.getElementById('userName').onclick = () => {
+    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
   };
 
   document.addEventListener('click', (e) => {
-    if (!userDropdown.contains(e.target)) {
+    if (!document.getElementById('userDropdown').contains(e.target)) {
       dropdownMenu.style.display = 'none';
     }
   });
@@ -91,7 +87,6 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// iframe にページ読み込み
 window.loadPage = function (url) {
   document.getElementById('contentFrame').src = url;
 };
