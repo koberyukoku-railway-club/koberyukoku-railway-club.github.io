@@ -90,3 +90,7 @@ onAuthStateChanged(auth, async (user) => {
 window.loadPage = function (url) {
   document.getElementById('contentFrame').src = url;
 };
+
+window.openDrive = function () {
+  window.location.href = "https://drive.google.com/drive/folders/1QbweptHSfYdVRsAym7yukE5p9Mfbrml43nS_N4chUE9mefunTTaU7-3MrMK84qs4hS5gOuDn";
+};
