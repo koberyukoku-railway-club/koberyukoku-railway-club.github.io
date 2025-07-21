@@ -48,14 +48,15 @@
             <button onclick="loadPage('/bbs')">
               トップ<br><span class="small-text">（掲示板）</span>
             </button>
-            <button>チャット</button>
-            <button>アンケート</button>
+            <button onclick="loadPage('/chat')">チャット</button>
+            <button onclick="loadPage('/questionnaire')">アンケート</button>
+            <button onclick="loadPage('/attendance')">出欠確認</button>
           </div>
           <div class="column">
-            <button>カレンダー</button>
-            <button>共有フォルダ</button>
-            <button>申請</button>
-            <button>マニュアル</button>
+            <button onclick="loadPage('/calendar')">カレンダー</button>
+            <button onclick="openDrive()">共有フォルダ</button>
+            <button onclick="loadPage('/application')">申請</button>
+            <button onclick="loadPage('/manual')">マニュアル</button>
           </div>
         </div>
       </div>
