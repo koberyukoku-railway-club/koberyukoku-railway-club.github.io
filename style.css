@@ -52,9 +52,6 @@ html, body {
   border-radius: 8px;
   background-color: white;
   font-weight: bold;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
   cursor: pointer;
   color: navy;
 }
@@ -69,7 +66,6 @@ html, body {
   padding: 5px 10px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
   display: none;
-  white-space: nowrap;
   z-index: 20;
 }
 
@@ -136,11 +132,23 @@ main {
 
 .left-pane {
   flex: 1;
-  border-right: 2px solid navy;
-  background-color: rgba(255,255,255,0.9);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
 }
 
-.left-pane iframe {
+.iframe-wrapper {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border: 3px solid #000080;
+  border-radius: 16px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.iframe-wrapper iframe {
   width: 100%;
   height: 100%;
   border: none;
@@ -149,15 +157,16 @@ main {
 .right-pane {
   width: 300px;
   padding: 20px;
-  background-color: rgba(255,255,255,0.95);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  background-color: transparent;
 }
 
 .button-grid {
   display: flex;
   gap: 10px;
+  margin-top: 0;
 }
 
 .button-grid .column {
