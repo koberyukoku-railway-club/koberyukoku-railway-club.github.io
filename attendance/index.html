@@ -1,1 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
 
+    .container {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .left {
+      flex: 0 0 39%;
+      overflow-y: auto;
+    }
+
+    .right {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .left iframe {
+      width: 100%;
+      height: 1500px;
+      border: none;
+    }
+
+    .right iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .left, .right {
+        flex: none;
+        width: 100%;
+      }
+
+      .left iframe {
+        height: 1200px;
+      }
+
+      .right iframe {
+        height: 500px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeA2ZXH7sHhafcvVSVJY6LPFp58b8VFePcCxxv-i1la2UW5jw/viewform?embedded=true" marginheight="0" marginwidth="0">読み込んでいます…</iframe>
+    </div>
+    <div class="right">
+      <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=2&ctz=Asia%2FTokyo&showPrint=0&showTitle=0&showTz=0&showCalendars=0&showTabs=0&src=a29iZXJ5dWtva3UucmFpbHdheS5jbHViQGdtYWlsLmNvbQ&src=MjhhYzBiZWRjY2JlYzc3YTJhOTU4N2VkMDU2OTJjMGUxOTVlMmRkODFlNGRhZmU3NmZiMDU0ZjUxNDc4MTllZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=YTA1MWYzODgxYTA2OTMwZDQzYzQ5NGY0NWJmODRlYjY4NTNlODg1YTZkYzUxYzUyMTE1MWIwNDliNTY5MTdmOEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=N2ViY2U2ZDg3ZjA2MTMzYWE5MTUxMDE1ZDM3ODVmNWI1YzU0ZDNjMTcwM2ZlZGUyY2Y1NzU0Nzc5ZDExNWM4OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=NDY4ZDc3YjA2ZGVkZTlhYTJmMThkNGM4N2JjN2ZmNzhhNmQ0N2Y4N2ZhMWY2NmZhYWI5YTk4ZTExZjZmMDA3N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23039be5&color=%23c0ca33&color=%23d81b60&color=%233f51b5&color=%23e4c441" scrolling="no"></iframe>
+    </div>
+  </div>
+</body>
+</html>
