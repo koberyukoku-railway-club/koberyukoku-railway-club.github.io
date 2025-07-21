@@ -134,7 +134,7 @@ main {
 }
 
 .left-pane {
-  flex: 1;
+  flex: 1.1; /* ←ここを少しだけ広くした（元は 1） */
   display: flex;
   justify-content: center;
   align-items: flex-start;
