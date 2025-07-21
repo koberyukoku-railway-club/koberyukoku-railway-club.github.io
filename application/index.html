@@ -1,1 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>出欠確認 | 鉄研ポータル</title>
+  <link rel="icon" href="/icon.png" />
+  <link rel="apple-touch-icon" href="/icon.png" />
+  <meta name="theme-color" content="#ffffff" />
+  <style>
+    @font-face {
+      font-family: 'Stick';
+      src: url('/Stick-Regular.ttf') format('truetype');
+    }
 
+    body {
+      margin: 0;
+      font-family: 'Stick', sans-serif;
+      background-color: #ffffff;
+      color: #000;
+    }
+
+    .header {
+      background-color: #f0f0f0;
+      padding: 10px 20px;
+      border-bottom: 2px solid #000080;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+    }
+
+    @media (min-width: 768px) {
+      .main {
+        flex-direction: row;
+        height: calc(100vh - 60px);
+      }
+    }
+
+    .left, .right {
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .left {
+      width: 100%;
+    }
+
+    .right {
+      width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      .left, .right {
+        width: 50%;
+        height: 100%;
+      }
+    }
+
+    .responsive-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .iframe-container {
+      position: relative;
+      width: 100%;
+      padding-top: 150%; /* 高さ比率を調整（スマホ向け） */
+    }
+
+    @media (min-width: 768px) {
+      .iframe-container {
+        height: 100%;
+        padding-top: 0;
+      }
+
+      .responsive-iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>出欠確認</h1>
+  </header>
+
+  <main class="main">
+    <div class="left">
+      <div class="iframe-container">
+        <iframe class="responsive-iframe"
+          src="https://docs.google.com/forms/d/e/1FAIpQLSeA2ZXH7sHhafcvVSVJY6LPFp58b8VFePcCxxv-i1la2UW5jw/viewform?embedded=true"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0">
+          読み込んでいます…
+        </iframe>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="iframe-container">
+        <iframe class="responsive-iframe"
+          src="https://calendar.google.com/calendar/embed?height=600&wkst=2&ctz=Asia%2FTokyo&showPrint=0&showTitle=0&showTz=0&showCalendars=0&showTabs=0&src=a29iZXJ5dWtva3UucmFpbHdheS5jbHViQGdtYWlsLmNvbQ&src=MjhhYzBiZWRjY2JlYzc3YTJhOTU4N2VkMDU2OTJjMGUxOTVlMmRkODFlNGRhZmU3NmZiMDU0ZjUxNDc4MTllZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=YTA1MWYzODgxYTA2OTMwZDQzYzQ5NGY0NWJmODRlYjY4NTNlODg1YTZkYzUxYzUyMTE1MWIwNDliNTY5MTdmOEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=N2ViY2U2ZDg3ZjA2MTMzYWE5MTUxMDE1ZDM3ODVmNWI1YzU0ZDNjMTcwM2ZlZGUyY2Y1NzU0Nzc5ZDExNWM4OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=NDY4ZDc3YjA2ZGVkZTlhYTJmMThkNGM4N2JjN2ZmNzhhNmQ0N2Y4N2ZhMWY2NmZhYWI5YTk4ZTExZjZmMDA3N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23039be5&color=%23c0ca33&color=%23d81b60&color=%233f51b5&color=%23e4c441"
+          scrolling="no">
+        </iframe>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
