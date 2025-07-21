@@ -12,7 +12,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <link rel="stylesheet" href="style.css" />
-  <!-- Firebase SDK（HTML側では import だけでOK） -->
   <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
   <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
   <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
@@ -35,6 +34,29 @@
       <input type="password" id="password" placeholder="パスワード" />
       <button onclick="login()">ログイン</button>
       <div id="loading" style="display: none; color: navy; margin-top: 10px;">ログイン中...</div>
+    </div>
+
+    <div id="contentArea" class="content-area" style="display: none;">
+      <div class="left-pane">
+        <iframe id="contentFrame" src="/bbs" frameborder="0"></iframe>
+      </div>
+      <div class="right-pane">
+        <div class="button-grid">
+          <div class="column">
+            <button onclick="loadPage('/bbs')">
+              トップ<br><span class="small-text">（掲示板）</span>
+            </button>
+            <button>チャット</button>
+            <button>アンケート</button>
+          </div>
+          <div class="column">
+            <button>カレンダー</button>
+            <button>共有フォルダ</button>
+            <button>申請</button>
+            <button>マニュアル</button>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 
