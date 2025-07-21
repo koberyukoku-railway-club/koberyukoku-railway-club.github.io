@@ -11,7 +11,6 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Firebase 設定（あなたのプロジェクト）
 const firebaseConfig = {
   apiKey: "AIzaSyD4UOBvpG254FLtK0MGm6R3LKMbgU6huYA",
   authDomain: "tekken-portal-76f26.firebaseapp.com",
@@ -21,12 +20,10 @@ const firebaseConfig = {
   appId: "1:516955782397:web:35bb7ccd1a5bbf32ebd294"
 };
 
-// Firebase 初期化
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ユーザー表示関数
 function showUser(name) {
   const userDropdown = document.getElementById('userDropdown');
   const userName = document.getElementById('userName');
@@ -35,6 +32,7 @@ function showUser(name) {
   userName.textContent = name;
   userDropdown.style.display = 'block';
   document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('contentArea').style.display = 'flex';
 
   userName.onclick = () => {
     dropdownMenu.style.display =
@@ -48,7 +46,6 @@ function showUser(name) {
   });
 }
 
-// ログイン処理
 window.login = async function () {
   const inputUsername = document.getElementById('username').value.trim();
   const inputPassword = document.getElementById('password').value;
@@ -66,7 +63,7 @@ window.login = async function () {
     }
 
     const { email, name } = userSnap.data();
-    const userCredential = await signInWithEmailAndPassword(auth, email, inputPassword);
+    await signInWithEmailAndPassword(auth, email, inputPassword);
     showUser(name);
   } catch (error) {
     console.error(error);
@@ -76,13 +73,11 @@ window.login = async function () {
   }
 };
 
-// ログアウト処理
 window.logout = async function () {
   await signOut(auth);
   location.reload();
 };
 
-// ページ読み込み時にログイン状態確認
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     const q = doc(db, "emailToUsername", user.email);
@@ -95,3 +90,8 @@ onAuthStateChanged(auth, async (user) => {
     }
   }
 });
+
+// iframe にページ読み込み
+window.loadPage = function (url) {
+  document.getElementById('contentFrame').src = url;
+};
