@@ -2,110 +2,32 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>鉄研ポータル</title>
-  <link rel="icon" href="/icon.png" type="image/png" />
-  <link rel="apple-touch-icon" href="/icon.png" />
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#ffffff" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>掲示板 | 鉄研ポータル</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      font-family: 'Stick-Regular', sans-serif;
-      background-color: #f4f4f4;
-      padding: 20px;
-    }
-    .header-title {
-      font-size: 24px;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 20px;
-    }
-    .announcement-item {
-      background-color: #fff;
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .announcement-content {
-      margin-top: 10px;
-      line-height: 1.6;
-      font-size: 16px;
-    }
-    .edit-btn, .delete-btn {
-      background-color: #000080;
-      color: white;
-      padding: 8px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-right: 10px;
-    }
-    .edit-btn:hover, .delete-btn:hover {
-      background-color: #003366;
-    }
-    #announcement-form-container {
-      margin-top: 30px;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    #announcement-form input, #announcement-form textarea {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    #announcement-form button {
-      background-color: #000080;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #announcement-form button:hover {
-      background-color: #003366;
-    }
-    .announcement-item + .announcement-item {
-      border-top: 1px solid #ddd;
-    }
-    .user-name {
-      font-size: 16px;
-      font-weight: bold;
-      color: #333;
-    }
-  </style>
+  <link rel="icon" href="/icon.png" />
+  <link rel="apple-touch-icon" href="/icon.png" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="preload" href="/Stick-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous" />
+  <script type="module" src="code.js" defer></script>
+  <script type="module" src="/shared/auth.js" defer></script>
 </head>
 <body>
-  <header class="site-header">
-    <div class="header-title">鉄研ポータル</div>
-    <div class="user-info">
-      <span id="user-name">ゲスト</span> | <a href="javascript:void(0);" onclick="logout()">ログアウト</a>
-    </div>
+  <header class="header">
+    <h1>掲示板</h1>
+    <button id="logoutButton">ログアウト</button>
   </header>
 
-  <main>
-    <!-- お知らせ一覧 -->
-    <div id="announcement-list"></div>
+  <main class="main">
+    <section id="postList" class="post-list">読み込み中...</section>
 
-    <!-- 投稿フォーム -->
-    <div id="announcement-form-container">
-      <form id="announcement-form">
-        <label for="content">お知らせ内容:</label>
-        <textarea id="content" required placeholder="お知らせを入力してください"></textarea>
-
-        <button type="submit">投稿</button>
-      </form>
-    </div>
+    <section class="post-form">
+      <h2>新しいお知らせ</h2>
+      <label>表示期間（開始）<input type="datetime-local" id="startTime"></label>
+      <label>表示期間（終了）<input type="datetime-local" id="endTime"></label>
+      <label>本文<textarea id="content" rows="6" placeholder="本文を入力..."></textarea></label>
+      <button id="submitPost">投稿</button>
+    </section>
   </main>
-
-  <script type="module" src="code.js"></script>
 </body>
 </html>
