@@ -40,6 +40,9 @@ function showUser(name) {
       dropdownMenu.style.display = 'none';
     }
   });
+
+  // ✅ ログイン後に /bbs を明示的に表示
+  loadPage('/bbs');
 }
 
 window.login = async function () {
