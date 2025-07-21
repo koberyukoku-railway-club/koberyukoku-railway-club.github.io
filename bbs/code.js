@@ -83,7 +83,7 @@ async function renderPosts() {
 
       postList.appendChild(div);
     } else if (endTime < now) {
-      deleteDoc(doc(db, "posts", id)); // 自動削除
+      deleteDoc(doc(db, "posts", id));
     }
   });
 
@@ -118,12 +118,15 @@ onAuthStateChanged(auth, async (user) => {
   }
   currentUser = user;
 
-  // 名前取得
-  const ref = doc(db, "emailToUsername", user.email);
-  const snap = await getDocs(query(collection(db, "emailToUsername"), where("__name__", "==", user.email)));
-  if (!snap.empty) {
-    currentName = snap.docs[0].data().name;
-  } else {
+  try {
+    const ref = doc(db, "emailToUsername", user.email);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      currentName = snap.data().name;
+    } else {
+      currentName = "ユーザー";
+    }
+  } catch {
     currentName = "ユーザー";
   }
 
