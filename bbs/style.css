@@ -1,103 +1,105 @@
+@font-face {
+  font-family: 'Stick';
+  src: url('/Stick-Regular.ttf') format('truetype');
+}
+
 body {
-  font-family: 'Stick-Regular', sans-serif;
   margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
+  font-family: 'Stick', sans-serif;
+  background-image: url('/background.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #000;
 }
 
-#board {
-  width: 90%;
-  margin: 20px auto;
+.header {
+  background-color: rgba(255,255,255,0.9);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #000080;
 }
 
-#announcements {
-  background-color: rgba(255, 255, 255, 0.8);
+.main {
   padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.post-list {
+  background: rgba(255,255,255,0.9);
+  border: 2px solid #000080;
   border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 30px;
 }
 
-.announcement-header {
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
+.post {
+  padding: 10px 0;
+  border-bottom: 1px solid #aaa;
 }
 
-#announcement-list {
-  margin-top: 20px;
-}
-
-.announcement-item {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-}
-
-.announcement-item:last-child {
+.post:last-child {
   border-bottom: none;
 }
 
-.announcement-content {
-  margin-top: 10px;
+.post-header {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.post-time {
+  color: #888;
+  font-size: 0.8rem;
+  margin-left: 8px;
+}
+
+.post-body {
+  white-space: pre-wrap;
+  margin-top: 6px;
+}
+
+.post-buttons {
+  margin-top: 5px;
 }
 
 button {
+  background-color: navy;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
   cursor: pointer;
+  font-size: 1rem;
 }
 
-#post-form {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.9);
+button:hover {
+  background-color: #001f4d;
+}
+
+.post-form {
+  background: rgba(255,255,255,0.95);
+  border: 2px solid #000080;
   border-radius: 10px;
+  padding: 20px;
 }
 
-.form-group {
-  margin-bottom: 15px;
+.post-form h2 {
+  margin-top: 0;
 }
 
-label {
+.post-form label {
   display: block;
-  font-size: 16px;
+  margin-bottom: 10px;
 }
 
-textarea {
+.post-form textarea,
+.post-form input {
   width: 100%;
-  padding: 10px;
-  font-size: 14px;
-}
-
-input[type="datetime-local"] {
-  width: 100%;
-  padding: 10px;
-}
-
-#post-button {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  background-color: #000080;
-  color: white;
-}
-
-#post-button:hover {
-  background-color: #003366;
-}
-
-.edit-delete-btns {
-  margin-top: 10px;
-}
-
-button.edit-btn, button.delete-btn {
-  background-color: #0066cc;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button.edit-btn:hover, button.delete-btn:hover {
-  background-color: #004b8c;
+  font-family: 'Stick', sans-serif;
+  padding: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
 }
