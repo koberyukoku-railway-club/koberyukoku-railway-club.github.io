@@ -1,17 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  query,
-  orderBy,
-  getDocs,
-  deleteDoc,
-  doc
+  getFirestore, collection, addDoc, getDocs, query,
+  orderBy, deleteDoc, doc, updateDoc, where, Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getAuth, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// Firebase 初期化
 const firebaseConfig = {
   apiKey: "AIzaSyD4UOBvpG254FLtK0MGm6R3LKMbgU6huYA",
   authDomain: "tekken-portal-76f26.firebaseapp.com",
@@ -22,121 +17,119 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-// ユーザーのログイン情報
+const postList = document.getElementById("postList");
+const submitBtn = document.getElementById("submitPost");
+const logoutButton = document.getElementById("logoutButton");
+
 let currentUser = null;
+let currentName = "";
 
-onAuthStateChanged(auth, (user) => {
+// 日時フォーマット
+function formatTimestamp(ts) {
+  const d = ts.toDate();
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
+
+// 表示
+async function renderPosts() {
+  postList.innerHTML = "";
+  const now = Timestamp.now();
+  const q = query(collection(db, "posts"), orderBy("startTime", "desc"));
+  const snapshot = await getDocs(q);
+
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data();
+    const id = docSnap.id;
+    const { name, content, startTime, endTime, uid } = data;
+
+    if (startTime <= now && endTime >= now) {
+      const div = document.createElement("div");
+      div.className = "post";
+      div.innerHTML = `
+        <div class="post-header">
+          ${name}<span class="post-time">${formatTimestamp(startTime)}</span>
+        </div>
+        <div class="post-body">${content}</div>
+      `;
+
+      if (uid === currentUser.uid) {
+        const btns = document.createElement("div");
+        btns.className = "post-buttons";
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "削除";
+        delBtn.onclick = async () => {
+          await deleteDoc(doc(db, "posts", id));
+          renderPosts();
+        };
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "編集";
+        editBtn.onclick = async () => {
+          const newContent = prompt("内容を編集:", content);
+          if (newContent) {
+            await updateDoc(doc(db, "posts", id), { content: newContent });
+            renderPosts();
+          }
+        };
+
+        btns.appendChild(editBtn);
+        btns.appendChild(delBtn);
+        div.appendChild(btns);
+      }
+
+      postList.appendChild(div);
+    } else if (endTime < now) {
+      deleteDoc(doc(db, "posts", id)); // 自動削除
+    }
+  });
+
+  if (postList.innerHTML === "") postList.textContent = "表示するお知らせはありません。";
+}
+
+// 投稿
+submitBtn.addEventListener("click", async () => {
+  const content = document.getElementById("content").value.trim();
+  const start = new Date(document.getElementById("startTime").value);
+  const end = new Date(document.getElementById("endTime").value);
+
+  if (!content || isNaN(start) || isNaN(end)) return alert("すべて入力してください");
+
+  await addDoc(collection(db, "posts"), {
+    name: currentName,
+    uid: currentUser.uid,
+    content,
+    startTime: Timestamp.fromDate(start),
+    endTime: Timestamp.fromDate(end),
+  });
+
+  document.getElementById("content").value = "";
+  renderPosts();
+});
+
+// 認証確認
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    location.href = "/";
+    return;
+  }
   currentUser = user;
-  if (user) {
-    // ログインしたらお知らせをロード
-    loadAnnouncements();
-    displayUserName();
-  }
-});
 
-// ユーザー名の表示
-function displayUserName() {
-  const userNameElement = document.getElementById('user-name');
-  if (currentUser && currentUser.displayName) {
-    userNameElement.textContent = currentUser.displayName;
+  // 名前取得
+  const ref = doc(db, "emailToUsername", user.email);
+  const snap = await getDocs(query(collection(db, "emailToUsername"), where("__name__", "==", user.email)));
+  if (!snap.empty) {
+    currentName = snap.docs[0].data().name;
   } else {
-    userNameElement.textContent = "ゲスト";
+    currentName = "ユーザー";
   }
-}
 
-// お知らせをロード
-async function loadAnnouncements() {
-  const q = query(collection(db, "announcements"), orderBy("startDate", "desc"));
-  const querySnapshot = await getDocs(q);
-  const announcementList = document.getElementById("announcement-list");
-
-  announcementList.innerHTML = ''; // 初期化
-
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    const announcementItem = document.createElement("div");
-    announcementItem.classList.add("announcement-item");
-
-    // 投稿者名、内容の表示
-    announcementItem.innerHTML = `
-      <div><strong>【${data.username}】</strong></div>
-      <div class="announcement-content">${data.content}</div>
-    `;
-
-    // 編集・削除ボタン（投稿者のみ）
-    if (data.username === currentUser.displayName) {
-      const editBtn = document.createElement("button");
-      editBtn.textContent = "編集";
-      editBtn.classList.add("edit-btn");
-
-      const deleteBtn = document.createElement("button");
-      deleteBtn.textContent = "削除";
-      deleteBtn.classList.add("delete-btn");
-
-      editBtn.onclick = () => editAnnouncement(doc.id);
-      deleteBtn.onclick = () => deleteAnnouncement(doc.id);
-
-      const btnContainer = document.createElement("div");
-      btnContainer.classList.add("edit-delete-btns");
-      btnContainer.appendChild(editBtn);
-      btnContainer.appendChild(deleteBtn);
-
-      announcementItem.appendChild(btnContainer);
-    }
-
-    announcementList.appendChild(announcementItem);
-  });
-}
-
-// お知らせ投稿処理
-document.getElementById("announcement-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  const content = document.getElementById("content").value;
-
-  if (currentUser) {
-    // Firestoreにお知らせデータを保存
-    await addDoc(collection(db, "announcements"), {
-      username: currentUser.displayName,
-      content: content,
-      startDate: new Date(),
-      endDate: new Date(new Date().getTime() + 86400000), // 24時間後に終了
-    });
-
-    loadAnnouncements();  // 再ロード
-  }
+  renderPosts();
 });
 
-// お知らせ削除処理
-async function deleteAnnouncement(id) {
-  await deleteDoc(doc(db, "announcements", id));
-  loadAnnouncements();  // 再ロード
-}
-
-// お知らせ編集処理（必要に応じて実装）
-function editAnnouncement(id) {
-  console.log("編集機能が未実装です。");
-}
-
-// 自動で表示期間終了したお知らせを削除
-async function deleteExpiredAnnouncements() {
-  const q = query(collection(db, "announcements"));
-  const querySnapshot = await getDocs(q);
-
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    const currentTime = new Date().getTime();
-    const endDate = data.endDate.seconds * 1000;
-
-    // 表示期間が過ぎているお知らせを削除
-    if (currentTime > endDate) {
-      deleteDoc(doc.ref);  // Firebaseから削除
-    }
-  });
-}
-
-// ページロード時に自動で削除処理を実行
-window.onload = deleteExpiredAnnouncements;
+logoutButton.onclick = () => {
+  signOut(auth).then(() => location.href = "/");
+};
