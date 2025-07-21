@@ -152,6 +152,7 @@ main {
   width: 100%;
   height: 100%;
   border: none;
+  background-color: white; /* ← iframe 背景白明示 */
 }
 
 .right-pane {
