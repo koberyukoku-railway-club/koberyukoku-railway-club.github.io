@@ -6,7 +6,10 @@
 body {
   margin: 0;
   font-family: 'Stick', sans-serif;
-  background-color: white;
+  background-image: url('/background.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: #000;
 }
 
