@@ -57,6 +57,7 @@ html, body {
   font-weight: bold;
   cursor: pointer;
   color: navy;
+  white-space: nowrap; /* ← 名前が折り返されないように追加 */
 }
 
 .dropdown-menu {
@@ -70,6 +71,7 @@ html, body {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
   display: none;
   z-index: 20;
+  white-space: nowrap; /* ← 中身全体も折り返さないように */
 }
 
 .dropdown-menu button {
@@ -79,6 +81,11 @@ html, body {
   font-weight: bold;
   cursor: pointer;
   font-size: 1rem;
+  white-space: nowrap; /* ← 改行を完全に防ぐ */
+  padding: 5px 10px;
+  display: block;
+  width: 100%;
+  text-align: left;
 }
 
 main {
@@ -134,7 +141,7 @@ main {
 }
 
 .left-pane {
-  flex: 2; /* ← ここを1.5から2に変更して横幅を大きくした */
+  flex: 2;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -158,7 +165,7 @@ main {
 }
 
 .right-pane {
-  width: 250px; /* ← 元の300pxから250pxに縮小してバランス調整 */
+  width: 250px;
   padding: 20px;
   display: flex;
   justify-content: center;
