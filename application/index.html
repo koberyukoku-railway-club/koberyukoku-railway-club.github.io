@@ -12,37 +12,41 @@
 
     body {
       margin: 0;
-      font-family: 'Stick', sans-serif;
-      background-color: #f0f0f0;
-      color: #000080;
       display: flex;
       height: 100vh;
+      font-family: 'Stick', sans-serif;
+      background-color: #ffffff;
+      color: #000080;
     }
 
     .sidebar {
-      background-color: #000080;
-      color: white;
-      padding: 20px;
-      min-width: 150px;
+      background-color: #ffffff;
+      color: #000080;
+      width: 200px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      padding: 1rem;
+      box-sizing: border-box;
+      min-width: 150px;
+      border-right: 1px solid #ccc;
     }
 
     .sidebar button {
-      background-color: white;
-      color: #000080;
-      border: none;
-      padding: 10px;
-      cursor: pointer;
       font-family: 'Stick', sans-serif;
+      margin-bottom: 1rem;
+      padding: 0.8rem 1rem;
+      border: none;
+      background-color: #000080;
+      color: white;
       font-size: 1rem;
-      border-radius: 4px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: left;
       transition: background-color 0.3s;
     }
 
     .sidebar button:hover {
-      background-color: #ddd;
+      background-color: #3333aa;
     }
 
     .content {
@@ -50,54 +54,59 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 10px;
+      padding: 1rem;
       box-sizing: border-box;
+      overflow-y: auto;
+      background-color: #ffffff;
     }
 
-    .content iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    .placeholder {
-      font-size: 1.5rem;
-      color: #000080;
+    .message {
+      font-size: 2rem;
       text-align: center;
+      color: #000080;
+    }
+
+    iframe {
+      border: none;
+      width: 100%;
+      max-width: 800px;
+      height: 80vh;
+      background-color: #ffffff;
     }
   </style>
 </head>
 <body>
   <div class="sidebar">
-    <button onclick="showForm('kashidashi')">備品貸出</button>
-    <button onclick="showForm('kounyuu')">備品購入</button>
-    <button onclick="showForm('event')">自主イベント開催</button>
-    <button onclick="showForm('keitai')">私用携帯電話</button>
+    <button onclick="showForm('form-lend')">備品貸出</button>
+    <button onclick="showForm('form-purchase')">備品購入</button>
+    <button onclick="showForm('form-event')">自主イベント開催</button>
+    <button onclick="showForm('form-phone')">私用携帯電話</button>
   </div>
   <div class="content" id="content">
-    <div class="placeholder">←←ボタンを押して申請</div>
+    <div class="message">←←ボタンを押して申請</div>
   </div>
 
-  <script>
-    const content = document.getElementById('content');
+  <template id="form-lend">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScVYS7yNXz6_fMMoB1GdrUsxw4xmxMZwmyZaEqwjWJzZM3Emg/viewform?embedded=true"></iframe>
+  </template>
+  <template id="form-purchase">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdUCaLIgWG24fQWiFDUmXAQ8OroKPQgBwiraZxMgRKtIHtIfQ/viewform?embedded=true"></iframe>
+  </template>
+  <template id="form-event">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe6BZW0LqqCtyehGDLHcN4SCdqnAMdAEna2xGVUk45Goq8-tw/viewform?embedded=true"></iframe>
+  </template>
+  <template id="form-phone">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScuOIehLoLGoojm1qS6qaafw3_5NI4Ny5etZdQsoXvTmdfR1w/viewform?embedded=true"></iframe>
+  </template>
 
-    function showForm(formName) {
-      let src = "";
-      switch(formName) {
-        case 'kashidashi':
-          src = "https://docs.google.com/forms/d/e/1FAIpQLScVYS7yNXz6_fMMoB1GdrUsxw4xmxMZwmyZaEqwjWJzZM3Emg/viewform?embedded=true";
-          break;
-        case 'kounyuu':
-          src = "https://docs.google.com/forms/d/e/1FAIpQLSdUCaLIgWG24fQWiFDUmXAQ8OroKPQgBwiraZxMgRKtIHtIfQ/viewform?embedded=true";
-          break;
-        case 'event':
-          src = "https://docs.google.com/forms/d/e/1FAIpQLSe6BZW0LqqCtyehGDLHcN4SCdqnAMdAEna2xGVUk45Goq8-tw/viewform?embedded=true";
-          break;
-        case 'keitai':
-          src = "https://docs.google.com/forms/d/e/1FAIpQLScuOIehLoLGoojm1qS6qaafw3_5NI4Ny5etZdQsoXvTmdfR1w/viewform?embedded=true";
-          break;
+  <script>
+    function showForm(formId) {
+      const content = document.getElementById('content');
+      const template = document.getElementById(formId);
+      content.innerHTML = '';
+      if (template) {
+        content.appendChild(template.content.cloneNode(true));
       }
-      content.innerHTML = `<iframe src="${src}" allowfullscreen></iframe>`;
     }
   </script>
 </body>
