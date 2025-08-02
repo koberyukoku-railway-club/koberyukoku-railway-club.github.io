@@ -9,6 +9,13 @@
       src: url('/Stick-Regular.ttf') format('truetype');
     }
 
+    /* 余白のリセット */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Stick', sans-serif;
       background-color: #ffffff;
@@ -21,7 +28,7 @@
       font-size: 1.5em;
       border-bottom: 2px solid #000000;
       padding-bottom: 0.3em;
-      margin-top: 2em;
+      margin-top: 1.5em;
       color: #000000;
     }
 
@@ -38,10 +45,15 @@
       margin-top: 0.5em;
       margin-left: 1em;
     }
+
+    /* 最初の見出しには余白を付けない */
+    .first-heading {
+      margin-top: 0;
+    }
   </style>
 </head>
 <body>
-  <h2>◆ルール</h2>
+  <h2 class="first-heading">◆ルール</h2>
   <div class="link-group">
     <p><a href="URL1.pdf" target="_blank">・神戸龍谷鉄道研究会 内規</a></p>
     <p><a href="URL2.pdf" target="_blank">・部活動に係る活動方針</a></p>
