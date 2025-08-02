@@ -59,6 +59,17 @@
       margin-top: 6px;
     }
 
+    .post-links {
+      margin-top: 10px;
+    }
+
+    .post-links a {
+      display: block;
+      color: #000080;
+      text-decoration: underline;
+      margin-bottom: 4px;
+    }
+
     .post-buttons {
       margin-top: 5px;
     }
@@ -101,6 +112,14 @@
       font-size: 1rem;
       box-sizing: border-box;
     }
+
+    .link-input-group {
+      margin-bottom: 10px;
+    }
+
+    #addLinkBtn {
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -112,6 +131,14 @@
       <label>表示期間（開始）<input type="datetime-local" id="startTime"></label>
       <label>表示期間（終了）<input type="datetime-local" id="endTime"></label>
       <label>本文<textarea id="content" rows="6" placeholder="本文を入力..."></textarea></label>
+
+      <div id="linkInputs">
+        <div class="link-input-group">
+          <input type="url" class="link-input" placeholder="リンクを入力（例：https://...）">
+        </div>
+      </div>
+      <button id="addLinkBtn" type="button">＋リンクを追加</button>
+
       <button id="submitPost">投稿</button>
     </section>
   </main>
@@ -123,7 +150,7 @@
       orderBy, deleteDoc, doc, updateDoc, where, Timestamp
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     import {
-      getAuth, onAuthStateChanged, signOut
+      getAuth, onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
@@ -141,6 +168,8 @@
 
     const postList = document.getElementById("postList");
     const submitBtn = document.getElementById("submitPost");
+    const addLinkBtn = document.getElementById("addLinkBtn");
+    const linkInputsContainer = document.getElementById("linkInputs");
 
     let currentUser = null;
     let currentName = "";
@@ -149,6 +178,27 @@
       const d = ts.toDate();
       return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
     }
+
+    function getLinkValues() {
+      return Array.from(document.querySelectorAll(".link-input"))
+        .map(input => input.value.trim())
+        .filter(url => url); // 空のリンクは無視
+    }
+
+    function createLinkInputs() {
+      const div = document.createElement("div");
+      div.className = "link-input-group";
+      const input = document.createElement("input");
+      input.type = "url";
+      input.className = "link-input";
+      input.placeholder = "リンクを入力（例：https://...）";
+      div.appendChild(input);
+      linkInputsContainer.appendChild(div);
+    }
+
+    addLinkBtn.addEventListener("click", () => {
+      createLinkInputs();
+    });
 
     async function renderPosts() {
       postList.innerHTML = "";
@@ -159,7 +209,7 @@
       snapshot.forEach(docSnap => {
         const data = docSnap.data();
         const id = docSnap.id;
-        const { name, content, startTime, endTime, uid } = data;
+        const { name, content, startTime, endTime, uid, links = [] } = data;
 
         if (startTime <= now && endTime >= now) {
           const div = document.createElement("div");
@@ -170,6 +220,21 @@
             </div>
             <div class="post-body">${content}</div>
           `;
+
+          // リンクの表示
+          if (links.length > 0) {
+            const linksDiv = document.createElement("div");
+            linksDiv.className = "post-links";
+            links.forEach(url => {
+              const a = document.createElement("a");
+              a.href = url;
+              a.target = "_blank";
+              a.rel = "noopener noreferrer";
+              a.textContent = url;
+              linksDiv.appendChild(a);
+            });
+            div.appendChild(linksDiv);
+          }
 
           if (uid === currentUser.uid) {
             const btns = document.createElement("div");
@@ -210,6 +275,7 @@
       const content = document.getElementById("content").value.trim();
       const start = new Date(document.getElementById("startTime").value);
       const end = new Date(document.getElementById("endTime").value);
+      const links = getLinkValues();
 
       if (!content || isNaN(start) || isNaN(end)) return alert("すべて入力してください");
 
@@ -219,9 +285,11 @@
         content,
         startTime: Timestamp.fromDate(start),
         endTime: Timestamp.fromDate(end),
+        links, // 追加
       });
 
       document.getElementById("content").value = "";
+      linkInputsContainer.innerHTML = '<div class="link-input-group"><input type="url" class="link-input" placeholder="リンクを入力（例：https://...）"></div>';
       renderPosts();
     });
 
