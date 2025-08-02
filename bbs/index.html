@@ -61,13 +61,23 @@
 
     .post-links {
       margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
     }
 
     .post-links a {
-      display: block;
-      color: #000080;
-      text-decoration: underline;
-      margin-bottom: 4px;
+      background-color: #000080;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: inline-block;
+    }
+
+    .post-links a:hover {
+      background-color: #001f4d;
     }
 
     .post-buttons {
@@ -134,7 +144,7 @@
 
       <div id="linkInputs">
         <div class="link-input-group">
-          <input type="url" class="link-input" placeholder="リンクを入力（例：https://...）">
+          <input type="url" class="link-input" placeholder="リンクを入力（https://...）">
         </div>
       </div>
       <button id="addLinkBtn" type="button">＋リンクを追加</button>
@@ -182,16 +192,17 @@
     function getLinkValues() {
       return Array.from(document.querySelectorAll(".link-input"))
         .map(input => input.value.trim())
-        .filter(url => url); // 空のリンクは無視
+        .filter(url => /^https?:\/\/.+/.test(url)); // https:// または http:// のみ
     }
 
-    function createLinkInputs() {
+    function createLinkInputs(initialValue = "") {
       const div = document.createElement("div");
       div.className = "link-input-group";
       const input = document.createElement("input");
       input.type = "url";
       input.className = "link-input";
-      input.placeholder = "リンクを入力（例：https://...）";
+      input.placeholder = "リンクを入力（https://...）";
+      input.value = initialValue;
       div.appendChild(input);
       linkInputsContainer.appendChild(div);
     }
@@ -199,6 +210,15 @@
     addLinkBtn.addEventListener("click", () => {
       createLinkInputs();
     });
+
+    function getDomainFromURL(url) {
+      try {
+        const u = new URL(url);
+        return u.hostname.replace(/^www\./, "");
+      } catch {
+        return url;
+      }
+    }
 
     async function renderPosts() {
       postList.innerHTML = "";
@@ -221,7 +241,6 @@
             <div class="post-body">${content}</div>
           `;
 
-          // リンクの表示
           if (links.length > 0) {
             const linksDiv = document.createElement("div");
             linksDiv.className = "post-links";
@@ -230,7 +249,7 @@
               a.href = url;
               a.target = "_blank";
               a.rel = "noopener noreferrer";
-              a.textContent = url;
+              a.textContent = getDomainFromURL(url);
               linksDiv.appendChild(a);
             });
             div.appendChild(linksDiv);
@@ -250,9 +269,11 @@
             const editBtn = document.createElement("button");
             editBtn.textContent = "編集";
             editBtn.onclick = async () => {
-              const newContent = prompt("内容を編集:", content);
-              if (newContent) {
-                await updateDoc(doc(db, "posts", id), { content: newContent });
+              const newContent = prompt("内容を編集（改行OK）:", content);
+              if (newContent !== null) {
+                const newLinks = prompt("リンクをカンマ区切りで編集（https://...）:", links.join(","));
+                const linkArray = newLinks ? newLinks.split(",").map(x => x.trim()).filter(x => /^https?:\/\/.+/.test(x)) : [];
+                await updateDoc(doc(db, "posts", id), { content: newContent, links: linkArray });
                 renderPosts();
               }
             };
@@ -285,11 +306,11 @@
         content,
         startTime: Timestamp.fromDate(start),
         endTime: Timestamp.fromDate(end),
-        links, // 追加
+        links,
       });
 
       document.getElementById("content").value = "";
-      linkInputsContainer.innerHTML = '<div class="link-input-group"><input type="url" class="link-input" placeholder="リンクを入力（例：https://...）"></div>';
+      linkInputsContainer.innerHTML = '<div class="link-input-group"><input type="url" class="link-input" placeholder="リンクを入力（https://...）"></div>';
       renderPosts();
     });
 
@@ -301,11 +322,7 @@
       currentUser = user;
 
       const snap = await getDocs(query(collection(db, "emailToUsername"), where("__name__", "==", user.email)));
-      if (!snap.empty) {
-        currentName = snap.docs[0].data().name;
-      } else {
-        currentName = "ユーザー";
-      }
+      currentName = !snap.empty ? snap.docs[0].data().name : "ユーザー";
 
       renderPosts();
     });
