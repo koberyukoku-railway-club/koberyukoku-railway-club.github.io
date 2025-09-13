@@ -1,129 +1,160 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>申請ページ</title>
+  <meta charset="UTF-8">
+  <title>フォーム選択ページ</title>
   <style>
     @font-face {
-      font-family: 'Stick';
+      font-family: '/Stick';
       src: url('/Stick-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
     }
 
     body {
       margin: 0;
-      height: 100vh;
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      font-family: 'Stick', sans-serif;
+      padding: 2rem;
+      font-family: '/Stick', sans-serif;
       background-color: #ffffff;
-      color: #000080;
     }
 
-    .sidebar {
-      background-color: #f9f9ff;
-      border-right: 1px solid #ccc;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
+    .top-bar {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
       gap: 1rem;
     }
 
-    .sidebar button {
-      font-family: inherit;
-      padding: 0.8rem 1rem;
-      border: 2px solid #000080;
+    .select-box {
       background-color: white;
-      color: #000080;
-      font-size: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      text-align: left;
-      transition: background-color 0.2s, transform 0.1s;
-    }
-
-    .sidebar button:hover {
-      background-color: #f0f0ff;
-    }
-
-    .sidebar button.active {
-      background-color: #000080;
-      color: #fff;
-    }
-
-    .content {
+      border: 3px solid #364286; /* 色を変更 */
+      border-radius: 9999px;
+      padding: 0.3rem 0.8rem;
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 1rem;
+      height: 2.5em;
       box-sizing: border-box;
-      overflow-y: auto;
     }
 
-    .message {
-      font-size: 1.5rem;
-      text-align: center;
-      color: #000080;
-      opacity: 0.7;
+    select {
+      padding: 0.3rem 0.5rem;
+      font-size: 1rem;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #000;
+      font-family: inherit;
+      appearance: none;
+    }
+
+    .rounded-box {
+      background-color: white;
+      border: 3px solid #364286; /* 色を変更 */
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.95rem;
+      color: #333;
+      width: 100%;
+      height: 2.5em;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    .form-box {
+      margin-top: 2rem;
+      border: 3px solid #364286; /* 色を変更 */
+      border-radius: 30px;
+      padding: 1rem;
+      background-color: white;
     }
 
     iframe {
-      border: none;
       width: 100%;
-      height: calc(100vh - 2rem);
-      background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,128,0.1);
-      opacity: 0;
-      transition: opacity 0.4s ease;
+      height: 100%;
+      border: none;
     }
 
-    iframe.loaded {
-      opacity: 1;
+    .form-container {
+      height: 1200px;
     }
   </style>
 </head>
 <body>
-  <div class="sidebar">
-    <button onclick="showForm(this, 'form-lend')">📦 備品貸出</button>
-    <button onclick="showForm(this, 'form-purchase')">🛒 備品購入</button>
-    <button onclick="showForm(this, 'form-event')">🎉 自主イベント</button>
-    <button onclick="showForm(this, 'form-phone')">📱 私用携帯電話</button>
-  </div>
-  <div class="content" id="content">
-    <div class="message">← 左のメニューから申請を選んでください</div>
+
+  <div class="top-bar">
+    <div class="select-box">
+      <select id="formSelector">
+        <option value="">プルダウンを選択</option>
+        <option value="absent">遅刻/早退/欠席届</option>
+        <option value="book">新刊購入希望届</option>
+        <option value="leave">長期休部届</option>
+        <option value="course">コース移動届</option>
+      </select>
+    </div>
+    <div id="descriptionBox" class="rounded-box"></div>
   </div>
 
-  <!-- テンプレート群 -->
-  <template id="form-lend">
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScVYS7yNXz6_fMMoB1GdrUsxw4xmxMZwmyZaEqwjWJzZM3Emg/viewform?embedded=true"></iframe>
-  </template>
-  <template id="form-purchase">
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdUCaLIgWG24fQWiFDUmXAQ8OroKPQgBwiraZxMgRKtIHtIfQ/viewform?embedded=true"></iframe>
-  </template>
-  <template id="form-event">
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe6BZW0LqqCtyehGDLHcN4SCdqnAMdAEna2xGVUk45Goq8-tw/viewform?embedded=true"></iframe>
-  </template>
-  <template id="form-phone">
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScuOIehLoLGoojm1qS6qaafw3_5NI4Ny5etZdQsoXvTmdfR1w/viewform?embedded=true"></iframe>
-  </template>
+  <div class="form-box">
+    <div id="formContainer" class="form-container">
+      <!-- 初期メッセージがここに表示される -->
+    </div>
+  </div>
 
   <script>
-    function showForm(button, formId) {
-      // サイドバーの選択状態を更新
-      document.querySelectorAll(".sidebar button").forEach(btn => btn.classList.remove("active"));
-      button.classList.add("active");
+    const formSelector = document.getElementById('formSelector');
+    const descriptionBox = document.getElementById('descriptionBox');
+    const formContainer = document.getElementById('formContainer');
 
-      // メインコンテンツを更新
-      const content = document.getElementById('content');
-      const template = document.getElementById(formId);
-      content.innerHTML = '';
-      if (template) {
-        const iframe = template.content.cloneNode(true).querySelector("iframe");
-        iframe.addEventListener("load", () => iframe.classList.add("loaded"));
-        content.appendChild(iframe);
+    const defaultMessage = `図書委員の皆さんが次のような状態の時は必ずこのフォームで申請してください。
+
+◆定例会/カウンター当番に遅刻/早退/欠席する
+　定例会は基本的に、ほぼ全員が集まってから始めます。今日は来ない人をみんなが待つなんてことがないように、事前に申請しておいてください。「もしかしたら遅刻するかも」という場合でも、必ず申請してください。
+
+◆しばらく図書委員の活動に来ない
+　塾や兼部の関係で、1ヶ月以上図書委員の活動に来られない場合も申請してください。長期休部届で記入した休部期間内は「遅刻/早退/欠席届」で申請する必要はありません。
+
+◆新刊購入希望届
+　図書委員なら、優先的に図書室に新刊を購入することができ(ると思い)ます。欲しい本があればこのフォームから申請してください。
+
+◆コース移動届【年度ごと】
+　コースを移動した場合(中学から神戸龍谷高校の一貫コース以外のコースに進学する場合も同様)は、このフォームから年度ごとに申請してください。なお、多様な学び支援コースに移動した場合は、その時点で図書委員の活動には参加できません。`;
+
+    const forms = {
+      absent: {
+        desc: "活動に遅刻/早退/欠席する場合は必ず申請してください。",
+        iframe: `<iframe src="https://docs.google.com/forms/d/e/1FAIpQLScdC5-32lQ5dmwZgVH-vpHI3d5MSfPUCSLmIFIqswZf0Mjcdg/viewform?embedded=true"></iframe>`
+      },
+      book: {
+        desc: "図書室に新しく入れて欲しい本があれば申請してください。",
+        iframe: `<iframe src="https://docs.google.com/forms/d/e/1FAIpQLScv7oLg6DGCQfrOqxVsJZH3tDB7rh6Cn-NrijTFBuV2KcuUzw/viewform?embedded=true"></iframe>`
+      },
+      course: {
+        desc: "コースを移動した場合は各年度ごとに申請してください。",
+        iframe: `<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfN6aZtAvmfANbdKWBeM1uPKAeVCuAuUs5esM67KAncZpumGg/viewform?embedded=true"></iframe>`
+      },
+      leave: {
+        desc: "長期間（１ヶ月以上）欠席が続く場合に申請してください。",
+        iframe: `<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeoEaB5-K3AiJHaRqfmJ3q0Zyeyo-sTi-3k8CJ-D-iOpGPoYA/viewform?embedded=true"></iframe>`
+      }
+    };
+
+    function updateContent() {
+      const value = formSelector.value;
+      if (forms[value]) {
+        descriptionBox.textContent = forms[value].desc;
+        formContainer.innerHTML = forms[value].iframe;
+      } else {
+        descriptionBox.textContent = "";
+        formContainer.innerHTML = `<div style="white-space: pre-wrap; line-height: 1.6; font-size: 0.95rem; color: #333;">
+          ${defaultMessage}
+        </div>`;
       }
     }
+
+    formSelector.addEventListener('change', updateContent);
+    window.addEventListener('DOMContentLoaded', updateContent);
   </script>
+
 </body>
 </html>
