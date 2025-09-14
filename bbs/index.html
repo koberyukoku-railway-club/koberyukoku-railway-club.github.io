@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>掲示板 | 鉄研ポータル</title>
+  <title>トップ</title>
   <link rel="icon" href="/icon.png" />
   <link rel="apple-touch-icon" href="/icon.png" />
   <meta name="theme-color" content="#ffffff" />
@@ -137,7 +137,7 @@
     <section id="postList" class="post-list">読み込み中...</section>
 
     <section class="post-form">
-      <h2>新しいお知らせ</h2>
+      <h2 id="formTitle">新しいお知らせ</h2>
       <label>表示期間（開始）<input type="datetime-local" id="startTime"></label>
       <label>表示期間（終了）<input type="datetime-local" id="endTime"></label>
       <label>本文<textarea id="content" rows="6" placeholder="本文を入力..."></textarea></label>
@@ -180,9 +180,11 @@
     const submitBtn = document.getElementById("submitPost");
     const addLinkBtn = document.getElementById("addLinkBtn");
     const linkInputsContainer = document.getElementById("linkInputs");
+    const formTitle = document.getElementById("formTitle");
 
     let currentUser = null;
     let currentName = "";
+    let editingPostId = null;
 
     function formatTimestamp(ts) {
       const d = ts.toDate();
@@ -192,7 +194,7 @@
     function getLinkValues() {
       return Array.from(document.querySelectorAll(".link-input"))
         .map(input => input.value.trim())
-        .filter(url => /^https?:\/\/.+/.test(url)); // https:// または http:// のみ
+        .filter(url => /^https?:\/\/.+/.test(url));
     }
 
     function createLinkInputs(initialValue = "") {
@@ -268,14 +270,18 @@
 
             const editBtn = document.createElement("button");
             editBtn.textContent = "編集";
-            editBtn.onclick = async () => {
-              const newContent = prompt("内容を編集（改行OK）:", content);
-              if (newContent !== null) {
-                const newLinks = prompt("リンクをカンマ区切りで編集（https://...）:", links.join(","));
-                const linkArray = newLinks ? newLinks.split(",").map(x => x.trim()).filter(x => /^https?:\/\/.+/.test(x)) : [];
-                await updateDoc(doc(db, "posts", id), { content: newContent, links: linkArray });
-                renderPosts();
-              }
+            editBtn.onclick = () => {
+              document.getElementById("content").value = content;
+              document.getElementById("startTime").value = new Date(startTime.toDate()).toISOString().slice(0,16);
+              document.getElementById("endTime").value = new Date(endTime.toDate()).toISOString().slice(0,16);
+
+              linkInputsContainer.innerHTML = "";
+              links.forEach(l => createLinkInputs(l));
+              if (links.length === 0) createLinkInputs();
+
+              editingPostId = id;
+              formTitle.textContent = "お知らせを編集";
+              submitBtn.textContent = "更新";
             };
 
             btns.appendChild(editBtn);
@@ -300,17 +306,32 @@
 
       if (!content || isNaN(start) || isNaN(end)) return alert("すべて入力してください");
 
-      await addDoc(collection(db, "posts"), {
-        name: currentName,
-        uid: currentUser.uid,
-        content,
-        startTime: Timestamp.fromDate(start),
-        endTime: Timestamp.fromDate(end),
-        links,
-      });
+      if (editingPostId) {
+        await updateDoc(doc(db, "posts", editingPostId), {
+          content,
+          startTime: Timestamp.fromDate(start),
+          endTime: Timestamp.fromDate(end),
+          links
+        });
+        editingPostId = null;
+        formTitle.textContent = "新しいお知らせ";
+        submitBtn.textContent = "投稿";
+      } else {
+        await addDoc(collection(db, "posts"), {
+          name: currentName,
+          uid: currentUser.uid,
+          content,
+          startTime: Timestamp.fromDate(start),
+          endTime: Timestamp.fromDate(end),
+          links,
+        });
+      }
 
       document.getElementById("content").value = "";
+      document.getElementById("startTime").value = "";
+      document.getElementById("endTime").value = "";
       linkInputsContainer.innerHTML = '<div class="link-input-group"><input type="url" class="link-input" placeholder="リンクを入力（https://...）"></div>';
+
       renderPosts();
     });
 
